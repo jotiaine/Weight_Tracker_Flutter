@@ -22,7 +22,11 @@ class InputCardState extends State<InputCard> {
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.all(20.0),
+          margin: const EdgeInsets.only(
+            top: 15.0,
+            left: 10.0,
+            right: 10.0,
+          ),
           decoration: BoxDecoration(
             color: kMotivationCardColor,
             borderRadius: BorderRadius.circular(10.0),
@@ -83,16 +87,16 @@ class InputCardState extends State<InputCard> {
                 ),
                 // Make a stylish elevated button
                 const SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 80.0,
                     vertical: 0.0,
                   ),
                   child: Material(
                     elevation: 5.0,
-                    color: Color.fromRGBO(50, 32, 70, 1),
+                    color: const Color.fromRGBO(50, 32, 70, 1),
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
@@ -100,7 +104,7 @@ class InputCardState extends State<InputCard> {
                           print('Save button pressed');
                         });
                       },
-                      child: Text(
+                      child: const Text(
                         'SAVE',
                         style: TextStyle(
                           fontSize: 16.0,

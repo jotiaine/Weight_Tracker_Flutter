@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:weight_tracker/components/motivation_card.dart';
+import 'package:weight_tracker/network/motivation_data.dart';
 import 'package:weight_tracker/utilities/constants.dart';
-import 'package:weight_tracker/components/weight_input_card.dart';
+import 'package:weight_tracker/components/input_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,10 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    print('asdasd');
-    // get the data from the API
-    // parse the JSON
-    // update the UI
+  }
+
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -32,21 +40,51 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 20.0,
         title: const Text('Weight Tracker'),
       ),
-      body: ListView(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: const [
-          MotivationCard(),
-          InputCard(),
-          InputCard(),
-          InputCard(),
-          InputCard(),
-          InputCard(),
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              kBackgroundColor,
+              kBackgroundColorLight,
+            ],
+          ),
+          color: kBackgroundColor,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: ListView(
+          children: const [
+            MotivationCard(),
+            InputCard(),
+            InputCard(),
+            InputCard(),
+            InputCard(),
+            InputCard(),
+          ],
+        ),
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   child: Text('Bottom'),
-      // ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: kBackgroundColor,
+        elevation: 10.0,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Business',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'School',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromRGBO(27, 195, 184, 1),
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

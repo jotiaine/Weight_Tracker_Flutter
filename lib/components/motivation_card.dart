@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:weight_tracker/network/motivation_data.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
-String? _motivationText;
+String _motivationText = 'Loading...';
+String _motivationTextAuthor = 'Unknown';
 
 class MotivationCard extends StatefulWidget {
   const MotivationCard({super.key});
@@ -11,25 +15,31 @@ class MotivationCard extends StatefulWidget {
 }
 
 class _MotivationCardState extends State<MotivationCard> {
-  // Method to get the data from the API
-  // void getData() async {
-  //   try {
-  //     var data = await MotivationData().getMotivationData();
-  //     setState(() {
-  //       _motivationText = data;
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
 
-    // get the data from the API
-    setState(() {
-      _motivationText = 'Motivation text will be here';
+    var data = MotivationData().getMotivationData();
+
+    // handle the response
+    data.then((value) {
+      var decodedData = jsonDecode(value);
+      print(decodedData);
+      print(decodedData['author']);
+      print(decodedData['text']);
+
+      String author = decodedData['author'];
+      String text = decodedData['text'];
+
+      // check if the author is null
+      if (text == '') {
+        text = 'Unknown';
+      }
+
+      setState(() {
+        _motivationText = text;
+        _motivationTextAuthor = author;
+      });
     });
   }
 
@@ -38,7 +48,11 @@ class _MotivationCardState extends State<MotivationCard> {
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.all(20.0),
+          margin: const EdgeInsets.only(
+            top: 10.0,
+            left: 10.0,
+            right: 10.0,
+          ),
           decoration: BoxDecoration(
             color: kMotivationCardColor,
             borderRadius: BorderRadius.circular(10.0),
@@ -52,6 +66,19 @@ class _MotivationCardState extends State<MotivationCard> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Padding(
+                  padding: EdgeInsets.only(
+                    bottom: 10.0,
+                  ),
+                  child: Text(
+                    'Motivation',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Color.fromRGBO(27, 195, 184, 0.5),
+                    ),
+                  ),
+                ),
                 const Icon(
                   Icons.favorite,
                   color: kMotivationIconColor,
@@ -62,7 +89,15 @@ class _MotivationCardState extends State<MotivationCard> {
                   height: 10.0,
                 ),
                 Text(
-                  '"$_motivationText."',
+                  '$_motivationText',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 21.0,
+                    color: kFontColor,
+                  ),
+                ),
+                Text(
+                  '- $_motivationTextAuthor',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 21.0,
