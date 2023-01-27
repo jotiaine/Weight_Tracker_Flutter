@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/motivation_data.dart';
 import 'package:weight_tracker/utilities/constants.dart';
@@ -15,32 +13,26 @@ class MotivationCard extends StatefulWidget {
 }
 
 class _MotivationCardState extends State<MotivationCard> {
+  void setupMotivationData() async {
+    try {
+      MotivationData motivationData = MotivationData();
+      await motivationData.getMotivationData();
+
+      setState(() {
+        _motivationText = motivationData.motivationText;
+        _motivationTextAuthor = motivationData.motivationTextAuthor;
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    var data = MotivationData().getMotivationData();
-
-    // handle the response
-    data.then((value) {
-      var decodedData = jsonDecode(value);
-      print(decodedData);
-      print(decodedData['author']);
-      print(decodedData['text']);
-
-      String author = decodedData['author'];
-      String text = decodedData['text'];
-
-      // check if the author is null
-      if (text == '') {
-        text = 'Unknown';
-      }
-
-      setState(() {
-        _motivationText = text;
-        _motivationTextAuthor = author;
-      });
-    });
+    setupMotivationData();
   }
 
   @override
@@ -48,6 +40,7 @@ class _MotivationCardState extends State<MotivationCard> {
     return Column(
       children: [
         Container(
+          width: 300.0,
           margin: const EdgeInsets.only(
             top: 10.0,
             left: 10.0,
@@ -58,9 +51,11 @@ class _MotivationCardState extends State<MotivationCard> {
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-              vertical: 30.0,
+            padding: const EdgeInsets.only(
+              right: 10.0,
+              left: 10.0,
+              top: 10.0,
+              bottom: 30.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -74,7 +69,7 @@ class _MotivationCardState extends State<MotivationCard> {
                     'Motivation',
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 14.0,
                       color: Color.fromRGBO(27, 195, 184, 0.5),
                     ),
                   ),
@@ -89,7 +84,7 @@ class _MotivationCardState extends State<MotivationCard> {
                   height: 10.0,
                 ),
                 Text(
-                  '$_motivationText',
+                  _motivationText,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 21.0,

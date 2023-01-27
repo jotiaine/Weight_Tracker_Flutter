@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:weight_tracker/components/motivation_card.dart';
-import 'package:weight_tracker/network/motivation_data.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 import 'package:weight_tracker/components/input_card.dart';
 
@@ -53,15 +49,35 @@ class _HomeScreenState extends State<HomeScreen> {
           color: kBackgroundColor,
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: ListView(
-          children: const [
-            MotivationCard(),
-            InputCard(),
-            InputCard(),
-            InputCard(),
-            InputCard(),
-            InputCard(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: const [
+                    MotivationCard(),
+                    MotivationCard(),
+                    MotivationCard(),
+                    MotivationCard(),
+                    MotivationCard(),
+                  ],
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: const [
+                    InputCard(),
+                    InputCard(),
+                    InputCard(),
+                    InputCard(),
+                    SizedBox(height: 10.0),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -74,11 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'Business',
+            label: 'Stats',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            label: 'School',
+            label: 'Account',
           ),
         ],
         currentIndex: _selectedIndex,

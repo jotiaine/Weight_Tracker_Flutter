@@ -22,6 +22,7 @@ class InputCardState extends State<InputCard> {
     return Column(
       children: [
         Container(
+          height: 250.0,
           margin: const EdgeInsets.only(
             top: 15.0,
             left: 10.0,
@@ -32,18 +33,28 @@ class InputCardState extends State<InputCard> {
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10.0,
-              vertical: 20.0,
+            padding: const EdgeInsets.only(
+              right: 10.0,
+              left: 10.0,
+              top: 10.0,
+              bottom: 20.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Text(
+                  'Weight',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color.fromRGBO(27, 195, 184, 0.5),
+                  ),
+                ),
                 const Icon(
                   Icons.favorite,
                   color: kMotivationIconColor,
-                  size: 24.0,
+                  size: 50.0,
                   semanticLabel: 'Text to motivate',
                 ),
                 const SizedBox(
@@ -51,8 +62,8 @@ class InputCardState extends State<InputCard> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 0.0,
+                    horizontal: 15.0,
+                    vertical: 10.0,
                   ),
                   child: TextField(
                     onTap: clearText,
@@ -68,6 +79,7 @@ class InputCardState extends State<InputCard> {
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color.fromRGBO(50, 32, 70, 1),
+                          width: 1.5,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(32.0)),
                       ),
@@ -107,7 +119,7 @@ class InputCardState extends State<InputCard> {
                       child: const Text(
                         'SAVE',
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: 14.0,
                         ),
                       ),
                     ),

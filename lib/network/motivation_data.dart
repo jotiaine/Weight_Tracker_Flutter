@@ -3,30 +3,54 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class MotivationData {
+  final String _apiKey = 'dd6792186dmsh76cb74ea31ac68ap1fd6f6jsna1fcd0a2c466';
+  final String _apiHost =
+      'quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com';
+  final String _url =
+      'https://quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com/quote?token=ipworld.info';
+
+  String? _motivationText;
+  String? _motivationTextAuthor;
+
   Future getMotivationData() async {
-// GET /quote?token=ipworld.info HTTP/1.1
-// X-Rapidapi-Key: dd6792186dmsh76cb74ea31ac68ap1fd6f6jsna1fcd0a2c466
-// X-Rapidapi-Host: quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com
-// Host: quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com
+    try {
+      var request = http.Request('GET', Uri.parse(''));
 
-    var request = http.Request(
-        'GET',
-        Uri.parse(
-            'https://quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com/quote?token=ipworld.info'));
+      request.headers.addAll({
+        "X-Rapidapi-Key": _apiKey,
+        "X-Rapidapi-Host": _apiHost,
+      });
 
-    request.headers.addAll({
-      "X-Rapidapi-Key": "dd6792186dmsh76cb74ea31ac68ap1fd6f6jsna1fcd0a2c466",
-      "X-Rapidapi-Host":
-          "quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com",
-    });
+      http.StreamedResponse response = await request.send();
 
-    http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        Map data = jsonDecode(await response.stream.bytesToString());
 
-    if (response.statusCode == 200) {
-      return await response.stream.bytesToString();
-    } else {
-      print(response.reasonPhrase);
+        _motivationText = data['text'];
+        _motivationTextAuthor = data['author'];
+
+        // check if the text is null
+        if (_motivationText!.isEmpty || _motivationText == null) {
+          _motivationText = 'You can do it. Just keep going forward.';
+        }
+
+        // check if the author is null
+        if (_motivationTextAuthor!.isEmpty || _motivationTextAuthor == null) {
+          _motivationTextAuthor = 'Unknown';
+        }
+
+        return response;
+      } else {
+        // ignore: avoid_print
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
     }
-    return response;
   }
+
+  // getters
+  String get motivationText => _motivationText!;
+  String get motivationTextAuthor => _motivationTextAuthor!;
 }
