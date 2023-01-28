@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/utilities/constants.dart';
+
+final _firestore = FirebaseFirestore.instance;
+User? loggedInUser;
 
 class InputCard extends StatefulWidget {
   const InputCard({super.key});
@@ -9,12 +14,42 @@ class InputCard extends StatefulWidget {
 }
 
 class InputCardState extends State<InputCard> {
-  final fieldText = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  String? _uid;
+  double? _weight = 80;
 
-  int _weight = 80;
+  final fieldTextController = TextEditingController();
+
+  void getCurrentUser() async {
+    try {
+      final user = _auth.currentUser;
+
+      if (user != null) {
+        loggedInUser = user;
+        _uid = loggedInUser!.uid;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void clearText() {
-    fieldText.clear();
+    fieldTextController.clear();
+  }
+
+  void addWeight() {
+    _firestore.collection('measurements').add({
+      'weight': _weight,
+      'uid': _uid,
+    });
+    fieldTextController.clear();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getCurrentUser();
   }
 
   @override
@@ -66,7 +101,7 @@ class InputCardState extends State<InputCard> {
                     vertical: 10.0,
                   ),
                   child: TextField(
-                    onTap: clearText,
+                    controller: fieldTextController,
                     keyboardType: const TextInputType.numberWithOptions(),
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
@@ -90,10 +125,7 @@ class InputCardState extends State<InputCard> {
                       ),
                     ),
                     onChanged: (value) {
-                      setState(() {
-                        _weight = int.parse(value);
-                        print(_weight);
-                      });
+                      _weight = double.parse(value);
                     },
                   ),
                 ),
@@ -111,11 +143,7 @@ class InputCardState extends State<InputCard> {
                     color: const Color.fromRGBO(50, 32, 70, 1),
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          print('Save button pressed');
-                        });
-                      },
+                      onPressed: addWeight,
                       child: const Text(
                         'SAVE',
                         style: TextStyle(

@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:weight_tracker/components/motivation_card.dart';
-import 'package:weight_tracker/screens/account_screen.dart';
+import 'package:weight_tracker/components/account_card.dart';
+import 'package:weight_tracker/screens/home_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
-import 'package:weight_tracker/components/input_card.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
-  static const String id = 'home_screen';
+  static const String id = 'account_screen';
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _AccountScreenState extends State<AccountScreen> {
   List<Widget> pages = [
     Text("Home"),
     Text("Account"),
@@ -47,49 +46,22 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    _selectedIndex = 0;
+    _selectedIndex = 1;
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: kBackgroundColor,
         body: Container(
+          width: double.infinity,
           decoration: BoxDecoration(
             gradient: kBackgrounGradientColor,
             color: kBackgroundColor,
             borderRadius: BorderRadius.circular(10.0),
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: const [
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: const [
-                      InputCard(),
-                      InputCard(),
-                      InputCard(),
-                      InputCard(),
-                      SizedBox(height: 10.0),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          child: const AccountCard(),
         ),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: kBackgroundColor,
