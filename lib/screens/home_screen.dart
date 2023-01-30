@@ -18,12 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Widget> pages = [
-    Text("Home"),
-    Text("Stats"),
-    Text("Account"),
-  ];
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {

@@ -10,25 +10,30 @@ class DataHandler {
   late final String _uid;
   get context => null;
 
-  void signIn({required email, required password}) async {
+  // Sign in the user with email and password
+  Future<bool> signIn({required email, required password}) async {
     try {
       final user = await _auth.signInWithEmailAndPassword(
-        email: email!,
-        password: password!,
+        // checks if user exists and if password is correct
+        email: email,
+        password: password,
       );
+
       if (user != null) {
         print(user);
       }
+
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
-  // Get the current logined user
+  // Fetch the current logined user
   void getCurrentUser() async {
     try {
       final user = _auth.currentUser;
-
       if (user != null) {
         loggedInUser = user;
         _uid = loggedInUser!.uid;
@@ -39,7 +44,10 @@ class DataHandler {
   }
 
   // Add a new user to the firebase database
-  void addUser({required String email, required String password}) async {
+  Future<bool> addUser({
+    required String email,
+    required String password,
+  }) async {
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -48,137 +56,173 @@ class DataHandler {
       if (newUser != null) {
         print(newUser);
       }
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  // Adding a new weight to the firebase database
+  void addWeight({required fieldTextController, required weight}) async {
+    try {
+      if (fieldTextController.text.isNotEmpty ||
+          fieldTextController.text != '') {
+        // round weight to 2 decimal place
+        String weightStr = weight!.toStringAsFixed(1);
+        weight = double.parse(weightStr);
+
+        getCurrentUser();
+      } else {
+        // inform user to enter a weight with info dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: kMotivationCardColor,
+              title: const Text('Please enter a weight'),
+              content: const Text('You have to enter a weight to track it.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+
+        if (weight == null) {
+          return;
+        }
+      }
+
+      await _firestore.collection('measurements').add({
+        'weight': weight,
+        'uid': _uid,
+      });
     } catch (e) {
       print(e);
     }
   }
 
-  // Adding a new weight to the firebase database
-  void addWeight({required fieldTextController, required weight}) {
-    if (fieldTextController.text.isNotEmpty || fieldTextController.text != '') {
-      // round weight to 2 decimal place
-      String weightStr = weight!.toStringAsFixed(1);
-      weight = double.parse(weightStr);
-
-      getCurrentUser();
-    } else {
-      // inform user to enter a weight with info dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: kMotivationCardColor,
-            title: const Text('Please enter a weight'),
-            content: const Text('You have to enter a weight to track it.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-
-      if (weight == null) {
-        return;
-      }
-    }
-
-    _firestore.collection('measurements').add({
-      'weight': weight,
-      'uid': _uid,
-    });
-  }
-
   // Adding a new height to the firebase database
-  void addHeight({required fieldTextController, required height}) {
-    if (fieldTextController.text.isNotEmpty || fieldTextController.text != '') {
-      // round weight to 2 decimal place
-      String weightStr = height.toStringAsFixed(1);
-      height = double.parse(weightStr);
+  void addHeight({required fieldTextController, required height}) async {
+    try {
+      if (fieldTextController.text.isNotEmpty ||
+          fieldTextController.text != '') {
+        // round weight to 2 decimal place
+        String weightStr = height.toStringAsFixed(1);
+        height = double.parse(weightStr);
 
-      getCurrentUser();
-    } else {
-      // inform user to enter a weight with info dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: kMotivationCardColor,
-            title: const Text('Please enter a height'),
-            content: const Text('You have to enter a height to track it.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+        getCurrentUser();
+      } else {
+        // inform user to enter a weight with info dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: kMotivationCardColor,
+              title: const Text('Please enter a height'),
+              content: const Text('You have to enter a height to track it.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
 
-      if (height == null) {
-        return;
+        if (height == null) {
+          return;
+        }
       }
-    }
 
-    _firestore.collection('enums').add({
-      'height': height,
-      'sex': null,
-      'target': null,
-      'uid': _uid,
-    });
+      await _firestore.collection('enums').add({
+        'height': height,
+        'sex': null,
+        'target': null,
+        'uid': _uid,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   // Adding a new target weight to the firebase database
-  void addWeightTarget({required fieldTextController, required weightTarget}) {
-    if (fieldTextController.text.isNotEmpty || fieldTextController.text != '') {
-      // round weight to 2 decimal place
-      String weightStr = weightTarget!.toStringAsFixed(1);
-      weightTarget = double.parse(weightStr);
+  void addWeightTarget(
+      {required fieldTextController, required weightTarget}) async {
+    try {
+      if (fieldTextController.text.isNotEmpty ||
+          fieldTextController.text != '') {
+        // round weight to 2 decimal place
+        String weightStr = weightTarget!.toStringAsFixed(1);
+        weightTarget = double.parse(weightStr);
 
-      getCurrentUser();
-    } else {
-      // inform user to enter a weight with info dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: kMotivationCardColor,
-            title: const Text('Please enter a target weight'),
-            content:
-                const Text('You have to enter a target weight to track it.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+        getCurrentUser();
+      } else {
+        // inform user to enter a weight with info dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: kMotivationCardColor,
+              title: const Text('Please enter a target weight'),
+              content:
+                  const Text('You have to enter a target weight to track it.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
 
-      if (weightTarget == null) {
-        return;
+        if (weightTarget == null) {
+          return;
+        }
       }
-    }
 
-    _firestore.collection('enums').add({
-      'height': null,
-      'sex': null,
-      'target': weightTarget,
-      'uid': _uid,
-    });
+      await _firestore.collection('enums').add({
+        'height': null,
+        'sex': null,
+        'target': weightTarget,
+        'uid': _uid,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
-  void logOut() async {
-    await _auth.signOut();
+  // Fetch the measurements from the firebase database
+  Future getMeasurements() async {
+    try {
+      getCurrentUser();
+      return _firestore.collection('measurements');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Log out the current user
+  Future<bool> logOut() async {
+    try {
+      await _auth.signOut();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

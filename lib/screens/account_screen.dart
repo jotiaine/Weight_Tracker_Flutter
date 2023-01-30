@@ -14,11 +14,6 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  List<Widget> pages = [
-    Text("Home"),
-    Text("Account"),
-  ];
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/components/height_card.dart';
-import 'package:weight_tracker/components/motivation_card.dart';
-import 'package:weight_tracker/components/sex_card.dart';
+import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/account_screen.dart';
 import 'package:weight_tracker/screens/home_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
@@ -17,11 +16,8 @@ class StatsScreen extends StatefulWidget {
 }
 
 class _StatsScreenState extends State<StatsScreen> {
-  List<Widget> pages = [
-    Text("Home"),
-    Text("Stats"),
-    Text("Account"),
-  ];
+  late DataHandler dataHandler;
+  late var _measurements;
 
   int _selectedIndex = 0;
 
@@ -49,7 +45,14 @@ class _StatsScreenState extends State<StatsScreen> {
   void initState() {
     super.initState();
 
+    dataHandler = DataHandler();
     _selectedIndex = 1;
+
+    // Fetching the measurements from the database
+    _measurements = () async => await dataHandler.getMeasurements();
+
+    // loop the _mearuments and print weight
+    print(_measurements);
   }
 
   @override
@@ -104,6 +107,5 @@ class _StatsScreenState extends State<StatsScreen> {
         ),
       ),
     );
-    ;
   }
 }

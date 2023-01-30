@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class MotivationData {
@@ -44,7 +43,13 @@ class MotivationData {
         // ignore: avoid_print
         print(response.reasonPhrase);
       }
+
+      return response;
     } catch (e) {
+      // set default values if there is an error
+      _motivationText = 'Loading...';
+      _motivationTextAuthor = 'Unknown';
+
       // ignore: avoid_print
       print(e);
     }
