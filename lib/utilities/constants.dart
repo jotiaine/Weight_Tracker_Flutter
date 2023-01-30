@@ -11,7 +11,9 @@ const kBackgroundColorLight = Color.fromARGB(255, 30, 19, 56);
 const kMotivationCardColor = Color.fromRGBO(21, 28, 39, 1);
 const kFontColor = Colors.white;
 const kMotivationIconColor = Color.fromRGBO(180, 79, 143, 1);
-const kButtomColor = Color.fromRGBO(50, 32, 70, 1);
+const kButtonColor = Color.fromARGB(255, 0, 49, 92);
+const kInputButtonColor = Color.fromRGBO(50, 32, 70, 1);
+const kInputButtonColorPressed = Color.fromARGB(255, 0, 80, 74);
 
 const kBackgrounGradientColor = LinearGradient(
   begin: Alignment.topLeft,

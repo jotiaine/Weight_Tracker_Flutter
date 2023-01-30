@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/login_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
@@ -11,33 +11,22 @@ class RegistrationCard extends StatefulWidget {
 }
 
 class _RegistrationCardState extends State<RegistrationCard> {
-  final _auth = FirebaseAuth.instance;
-
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-
+  late DataHandler dataHandler;
   String? _email;
   String? _password;
-
-  void addUser() async {
-    try {
-      final newUser = await _auth.createUserWithEmailAndPassword(
-        email: _email!,
-        password: _password!,
-      );
-      if (newUser != null) {
-        print(newUser);
-        Navigator.pushNamed(context, LoginScreen.id);
-        clearTextfields();
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 
   void clearTextfields() {
     _emailTextController.clear();
     _passwordTextController.clear();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    dataHandler = DataHandler();
   }
 
   @override
@@ -162,13 +151,17 @@ class _RegistrationCardState extends State<RegistrationCard> {
           ),
           Material(
             elevation: 5.0,
-            color: kButtomColor,
+            color: kButtonColor,
             borderRadius: BorderRadius.circular(30.0),
             child: MaterialButton(
               minWidth: 200.0,
               height: 42.0,
-              // Within the `FirstRoute` widget
-              onPressed: addUser,
+              onPressed: () {
+                dataHandler.addUser(email: _email!, password: _password!);
+
+                Navigator.pushNamed(context, LoginScreen.id);
+                clearTextfields();
+              },
               child: const Text('Register'),
             ),
           ),

@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:weight_tracker/screens/home_screen.dart';
+import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/login_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
@@ -12,9 +11,13 @@ class AccountCard extends StatefulWidget {
 }
 
 class _AccountCardState extends State<AccountCard> {
-  void logOut() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushNamed(context, LoginScreen.id);
+  late DataHandler dataHandler;
+
+  @override
+  void initState() {
+    super.initState();
+
+    dataHandler = DataHandler();
   }
 
   @override
@@ -57,21 +60,19 @@ class _AccountCardState extends State<AccountCard> {
           const SizedBox(
             height: 30.0,
           ),
-          // TextButton(
-          //   onPressed: () {
-          //     Navigator.pushNamed(context, RegistrationScreen.id);
-          //   },
-          //   child: const Text('Sign up'),
-          // ),
           Material(
             elevation: 5.0,
-            color: kButtomColor,
+            color: kButtonColor,
             borderRadius: BorderRadius.circular(30.0),
             child: MaterialButton(
               minWidth: 200.0,
               height: 42.0,
               // Within the `FirstRoute` widget
-              onPressed: logOut,
+              onPressed: () {
+                dataHandler.logOut();
+
+                Navigator.pushNamed(context, LoginScreen.id);
+              },
               child: const Text('Logout'),
             ),
           ),

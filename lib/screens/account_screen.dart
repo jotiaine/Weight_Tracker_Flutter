@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/components/account_card.dart';
 import 'package:weight_tracker/screens/home_screen.dart';
+import 'package:weight_tracker/screens/stats_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -28,6 +29,8 @@ class _AccountScreenState extends State<AccountScreen> {
 
       if (_selectedIndex == 0) {
         Navigator.pushNamed(context, HomeScreen.id);
+      } else if (_selectedIndex == 1) {
+        Navigator.pushNamed(context, StatsScreen.id);
       } else {
         Navigator.pushNamed(context, AccountScreen.id);
       }
@@ -35,18 +38,14 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Color getSelectedItemColor() {
-    if (_selectedIndex == 0) {
-      return const Color.fromRGBO(27, 195, 184, 1);
-    } else {
-      return const Color.fromRGBO(27, 195, 184, 1);
-    }
+    return const Color.fromRGBO(27, 195, 184, 1);
   }
 
   @override
   void initState() {
     super.initState();
 
-    _selectedIndex = 1;
+    _selectedIndex = 2;
   }
 
   @override
@@ -72,7 +71,11 @@ class _AccountScreenState extends State<AccountScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.school),
+              icon: Icon(Icons.data_usage),
+              label: 'Stats',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
               label: 'Account',
             ),
           ],

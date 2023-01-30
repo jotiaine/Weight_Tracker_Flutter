@@ -1,47 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
-final _firestore = FirebaseFirestore.instance;
-User? loggedInUser;
-
-class InputCard extends StatefulWidget {
-  const InputCard({super.key});
+class WeightTargetCard extends StatefulWidget {
+  const WeightTargetCard({super.key});
 
   @override
-  State<InputCard> createState() => InputCardState();
+  State<WeightTargetCard> createState() => WeightTargetCardState();
 }
 
-class InputCardState extends State<InputCard> {
-  final _auth = FirebaseAuth.instance;
-  String? _uid;
-  double? _weight = 80;
+class WeightTargetCardState extends State<WeightTargetCard> {
+  late DataHandler dataHandler;
+  double? _weightTarget;
 
   final fieldTextController = TextEditingController();
 
-  void getCurrentUser() async {
-    try {
-      final user = _auth.currentUser;
-
-      if (user != null) {
-        loggedInUser = user;
-        _uid = loggedInUser!.uid;
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void clearText() {
-    fieldTextController.clear();
-  }
-
-  void addWeight() {
-    _firestore.collection('measurements').add({
-      'weight': _weight,
-      'uid': _uid,
-    });
     fieldTextController.clear();
   }
 
@@ -49,7 +23,7 @@ class InputCardState extends State<InputCard> {
   void initState() {
     super.initState();
 
-    getCurrentUser();
+    dataHandler = DataHandler();
   }
 
   @override
@@ -79,7 +53,7 @@ class InputCardState extends State<InputCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Weight',
+                  'Target weight',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 14.0,
@@ -105,7 +79,7 @@ class InputCardState extends State<InputCard> {
                     keyboardType: const TextInputType.numberWithOptions(),
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
-                      hintText: 'Enter your weight in kg',
+                      hintText: 'Enter your target weight in kg',
                       contentPadding: EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 20.0),
                       border: OutlineInputBorder(
@@ -125,7 +99,7 @@ class InputCardState extends State<InputCard> {
                       ),
                     ),
                     onChanged: (value) {
-                      _weight = double.parse(value);
+                      _weightTarget = double.parse(value);
                     },
                   ),
                 ),
@@ -143,7 +117,14 @@ class InputCardState extends State<InputCard> {
                     color: const Color.fromRGBO(50, 32, 70, 1),
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
-                      onPressed: addWeight,
+                      onPressed: () {
+                        dataHandler.addWeightTarget(
+                          fieldTextController: fieldTextController,
+                          weightTarget: _weightTarget,
+                        );
+
+                        clearText();
+                      },
                       child: const Text(
                         'SAVE',
                         style: TextStyle(

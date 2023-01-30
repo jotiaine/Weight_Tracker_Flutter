@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:weight_tracker/components/height_card.dart';
 import 'package:weight_tracker/components/motivation_card.dart';
 import 'package:weight_tracker/components/sex_card.dart';
-import 'package:weight_tracker/components/weight_target_card.dart';
 import 'package:weight_tracker/screens/account_screen.dart';
-import 'package:weight_tracker/screens/stats_screen.dart';
+import 'package:weight_tracker/screens/home_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 import 'package:weight_tracker/components/weight_card.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class StatsScreen extends StatefulWidget {
+  const StatsScreen({super.key});
 
-  static const String id = 'home_screen';
+  static const String id = 'stats_screen';
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<StatsScreen> createState() => _StatsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _StatsScreenState extends State<StatsScreen> {
   List<Widget> pages = [
     Text("Home"),
     Text("Stats"),
@@ -50,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    _selectedIndex = 0;
+    _selectedIndex = 1;
   }
 
   @override
@@ -58,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         body: Container(
+          height: double.infinity,
           decoration: BoxDecoration(
             gradient: kBackgrounGradientColor,
             color: kBackgroundColor,
@@ -67,25 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: const [
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: const [
-                      SexCard(),
                       WeightCard(),
                       HeightCard(),
-                      WeightTargetCard(),
+                      HeightCard(),
                       SizedBox(height: 10.0),
                     ],
                   ),
@@ -117,5 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+    ;
   }
 }

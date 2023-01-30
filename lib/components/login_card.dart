@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/home_screen.dart';
 import 'package:weight_tracker/screens/registration_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
@@ -12,32 +12,23 @@ class LoginCard extends StatefulWidget {
 }
 
 class _LoginCardState extends State<LoginCard> {
-  final _auth = FirebaseAuth.instance;
+  late DataHandler dataHandler;
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
   String? _email;
   String? _password;
 
-  void signIn() async {
-    try {
-      final user = await _auth.signInWithEmailAndPassword(
-        email: _email!,
-        password: _password!,
-      );
-      if (user != null) {
-        print(user);
-        Navigator.pushNamed(context, HomeScreen.id);
-        clearTextfields();
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void clearTextfields() {
     _emailTextController.clear();
     _passwordTextController.clear();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    dataHandler = DataHandler();
   }
 
   @override
@@ -61,7 +52,7 @@ class _LoginCardState extends State<LoginCard> {
           const Text(
             'Weightsteps',
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.lightBlueAccent,
               fontSize: 45.0,
               fontWeight: FontWeight.w400,
             ),
@@ -72,8 +63,8 @@ class _LoginCardState extends State<LoginCard> {
           const Text(
             'Take the first and the rest will follow',
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 12.0,
+              color: Colors.lightBlueAccent,
+              fontSize: 14.0,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -161,18 +152,36 @@ class _LoginCardState extends State<LoginCard> {
             onPressed: () {
               Navigator.pushNamed(context, RegistrationScreen.id);
             },
-            child: const Text('Sign up'),
+            child: const Text(
+              'Sign up',
+              style: TextStyle(
+                color: Colors.lightBlueAccent,
+              ),
+            ),
           ),
           Material(
             elevation: 5.0,
-            color: kButtomColor,
+            color: kButtonColor,
             borderRadius: BorderRadius.circular(30.0),
             child: MaterialButton(
               minWidth: 200.0,
               height: 42.0,
               // Within the `FirstRoute` widget
-              onPressed: signIn,
-              child: const Text('Login'),
+              onPressed: () {
+                dataHandler.signIn(
+                  email: _email,
+                  password: _password,
+                );
+
+                clearTextfields();
+                Navigator.pushNamed(context, HomeScreen.id);
+              },
+              child: const Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.lightBlueAccent,
+                ),
+              ),
             ),
           ),
         ],

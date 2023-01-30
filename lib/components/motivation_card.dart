@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/motivation_data.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
-String _motivationText = 'Loading...';
-String _motivationTextAuthor = 'Unknown';
-
 class MotivationCard extends StatefulWidget {
   const MotivationCard({super.key});
 
@@ -13,6 +10,9 @@ class MotivationCard extends StatefulWidget {
 }
 
 class _MotivationCardState extends State<MotivationCard> {
+  String _motivationText = 'Loading...';
+  String _motivationTextAuthor = 'Unknown';
+
   void setupMotivationData() async {
     try {
       MotivationData motivationData = MotivationData();
