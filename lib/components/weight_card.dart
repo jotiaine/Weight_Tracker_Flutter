@@ -61,10 +61,10 @@ class WeightCardState extends State<WeightCard> {
                   ),
                 ),
                 const Icon(
-                  Icons.favorite,
+                  Icons.monitor_weight,
                   color: kMotivationIconColor,
                   size: 50.0,
-                  semanticLabel: 'Text to motivate',
+                  semanticLabel: 'Weight Icon',
                 ),
                 const SizedBox(
                   height: 10.0,
@@ -88,13 +88,13 @@ class WeightCardState extends State<WeightCard> {
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color.fromRGBO(50, 32, 70, 1),
-                          width: 1.5,
+                          width: 2.0,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(32.0)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Color.fromRGBO(50, 32, 70, 1), width: 2.5),
+                            color: Color.fromRGBO(50, 32, 70, 1), width: 3.5),
                         borderRadius: BorderRadius.all(Radius.circular(32.0)),
                       ),
                     ),
