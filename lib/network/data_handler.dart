@@ -75,7 +75,7 @@ class DataHandler {
   }
 
   // Adding a new weight to the firebase database
-  void addWeight({required weight}) async {
+  Future<void> addWeight({required double weight}) async {
     try {
       getCurrentUser();
 
@@ -293,7 +293,7 @@ class DataHandler {
   }
 
   // Adding a new target weight to the firebase database
-  Future updateWeightTarget({required weightTarget}) async {
+  Future updateWeightTarget({required double weightTarget}) async {
     try {
       getCurrentUser();
 
@@ -316,31 +316,29 @@ class DataHandler {
     }
   }
 
-  Future updateHeight({required height}) async {
+  Future updateHeight({required double height}) async {
     try {
       getCurrentUser();
 
-      if (height >= 120.0 && height <= 220.0) {
-        // Updating height in the database
-        final snapshot = await _firestore
-            .collection('enums')
-            .where('uid', isEqualTo: _uid)
-            .get();
+      // Updating height in the database
+      final snapshot = await _firestore
+          .collection('enums')
+          .where('uid', isEqualTo: _uid)
+          .get();
 
-        final id = snapshot.docs[0].id;
+      final id = snapshot.docs[0].id;
 
-        await _firestore.collection('enums').doc(id).update({
-          'height': height,
-        });
+      await _firestore.collection('enums').doc(id).update({
+        'height': height,
+      });
 
-        return;
-      }
+      return;
     } catch (e) {
       print(e);
     }
   }
 
-  Future updateGender({required gender}) async {
+  Future updateGender({required String gender}) async {
     try {
       // Set height 0.0 if not found
       getCurrentUser();

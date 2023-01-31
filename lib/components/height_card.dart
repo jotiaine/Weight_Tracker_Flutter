@@ -11,7 +11,8 @@ class HeightCard extends StatefulWidget {
 
 class _HeightCardState extends State<HeightCard> {
   late DataHandler dataHandler;
-  double? _height;
+  late double _height;
+  late bool _isAddedToDatabase;
 
   final fieldTextController = TextEditingController();
 
@@ -20,6 +21,10 @@ class _HeightCardState extends State<HeightCard> {
     super.initState();
 
     dataHandler = DataHandler();
+    setState(() {
+      _isAddedToDatabase = false;
+      _height = 0.0;
+    });
   }
 
   @override
@@ -72,7 +77,7 @@ class _HeightCardState extends State<HeightCard> {
                   ),
                   child: TextField(
                     controller: fieldTextController,
-                    keyboardType: const TextInputType.numberWithOptions(),
+                    keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       hintText: 'Enter your height in cm',
@@ -114,19 +119,32 @@ class _HeightCardState extends State<HeightCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () async {
-                        if (_height! >= 120 && _height! <= 220) {
-                          await dataHandler.updateHeight(
+                        if (_height >= 120 && _height <= 220) {
+                          await dataHandler
+                              .updateHeight(
                             height: _height,
-                          );
+                          )
+                              .then((value) {
+                            setState(() {
+                              _isAddedToDatabase = true;
+                            });
+                          });
                         } else {
+                          setState(() {
+                            _isAddedToDatabase = false;
+                          });
+                        }
+
+                        if (!_isAddedToDatabase) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 backgroundColor: kMotivationCardColor,
-                                title: const Text('Please enter a height'),
+                                title:
+                                    const Text('Please enter a target weight'),
                                 content: const Text(
-                                    'You have to enter a height to track it.'),
+                                    'You have to enter a reasonable target weight to track it.'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -140,6 +158,9 @@ class _HeightCardState extends State<HeightCard> {
                           );
                         }
 
+                        setState(() {
+                          _isAddedToDatabase = false;
+                        });
                         fieldTextController.clear();
                       },
                       child: const Text(

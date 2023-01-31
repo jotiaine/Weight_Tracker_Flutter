@@ -11,7 +11,9 @@ class WeightTargetCard extends StatefulWidget {
 
 class WeightTargetCardState extends State<WeightTargetCard> {
   late DataHandler dataHandler;
-  double? _weightTarget;
+  late bool _isAddedToDatabase;
+
+  late double _weightTarget;
 
   final fieldTextController = TextEditingController();
 
@@ -24,6 +26,10 @@ class WeightTargetCardState extends State<WeightTargetCard> {
     super.initState();
 
     dataHandler = DataHandler();
+    setState(() {
+      _isAddedToDatabase = false;
+      _weightTarget = 0.0;
+    });
   }
 
   @override
@@ -76,7 +82,7 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                   ),
                   child: TextField(
                     controller: fieldTextController,
-                    keyboardType: const TextInputType.numberWithOptions(),
+                    keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       hintText: 'Enter your target weight in kg',
@@ -118,11 +124,23 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
-                        if (_weightTarget! >= 45 && _weightTarget! <= 150) {
-                          dataHandler.updateWeightTarget(
-                            weightTarget: _weightTarget,
-                          );
+                        if (_weightTarget >= 45 && _weightTarget <= 150) {
+                          dataHandler
+                              .updateWeightTarget(
+                                weightTarget: _weightTarget,
+                              )
+                              .then((value) => {
+                                    setState(() {
+                                      _isAddedToDatabase = true;
+                                    }),
+                                  });
                         } else {
+                          setState(() {
+                            _isAddedToDatabase = false;
+                          });
+                        }
+
+                        if (!_isAddedToDatabase) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -131,7 +149,7 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                                 title:
                                     const Text('Please enter a target weight'),
                                 content: const Text(
-                                    'You have to enter a target weight to track it.'),
+                                    'You have to enter a reasonable target weight to track it.'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -145,6 +163,9 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                           );
                         }
 
+                        setState(() {
+                          _isAddedToDatabase = false;
+                        });
                         clearText();
                       },
                       child: const Text(

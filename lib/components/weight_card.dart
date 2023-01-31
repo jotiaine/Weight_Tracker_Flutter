@@ -11,7 +11,9 @@ class WeightCard extends StatefulWidget {
 
 class WeightCardState extends State<WeightCard> {
   late DataHandler dataHandler;
-  double? _weight;
+  late bool _isAddedToDatabase;
+
+  late double _weight;
 
   final fieldTextController = TextEditingController();
 
@@ -24,6 +26,10 @@ class WeightCardState extends State<WeightCard> {
     super.initState();
 
     dataHandler = DataHandler();
+    setState(() {
+      _isAddedToDatabase = false;
+      _weight = 0.0;
+    });
   }
 
   @override
@@ -76,7 +82,7 @@ class WeightCardState extends State<WeightCard> {
                   ),
                   child: TextField(
                     controller: fieldTextController,
-                    keyboardType: const TextInputType.numberWithOptions(),
+                    keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       hintText: 'Enter your weight in kg',
@@ -117,12 +123,25 @@ class WeightCardState extends State<WeightCard> {
                     color: const Color.fromRGBO(50, 32, 70, 1),
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
-                      onPressed: () {
-                        if (_weight! >= 45 && _weight! <= 300) {
-                          dataHandler.addWeight(
+                      onPressed: () async {
+                        if (_weight >= 40 && _weight <= 300) {
+                          await dataHandler
+                              .addWeight(
                             weight: _weight,
-                          );
+                          )
+                              .then((value) {
+                            setState(() {
+                              _isAddedToDatabase = true;
+                            });
+                          });
                         } else {
+                          setState(() {
+                            _isAddedToDatabase = false;
+                          });
+                        }
+
+                        if (!_isAddedToDatabase) {
+                          // If the weight is not added to the database
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -130,7 +149,7 @@ class WeightCardState extends State<WeightCard> {
                                 backgroundColor: kMotivationCardColor,
                                 title: const Text('Please enter a height'),
                                 content: const Text(
-                                    'You have to enter a weight to track it.'),
+                                    'You have to enter a reasonable weight to track it.'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -144,6 +163,9 @@ class WeightCardState extends State<WeightCard> {
                           );
                         }
 
+                        setState(() {
+                          _isAddedToDatabase = false;
+                        });
                         clearText();
                       },
                       child: const Text(
