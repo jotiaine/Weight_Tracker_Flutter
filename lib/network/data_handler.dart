@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
@@ -12,6 +13,8 @@ class DataHandler {
   double? _bmi;
   double? _height;
   double? _weight;
+  double? _targetWeight;
+  double? _toLoseWeight;
 
   // Sign in the user with email and password
   Future<bool> signIn({required email, required password}) async {
@@ -41,6 +44,40 @@ class DataHandler {
     } catch (e) {
       // ignore: avoid_print
       print(e);
+    }
+  }
+
+  // fetch the target weight from the database
+  Stream<double> get targetWeightStream {
+    try {
+      getCurrentUser();
+
+      return _firestore
+          .collection('enums')
+          .where('uid', isEqualTo: _uid)
+          .snapshots()
+          .map((event) {
+        final targetWeight = event.docs[0].data()['target'];
+        return targetWeight;
+      }).asyncMap((targetWeight) async {
+        final weightSnapshot = await _firestore
+            .collection('measurements')
+            .where('uid', isEqualTo: _uid)
+            .orderBy('date', descending: true)
+            .limit(1)
+            .get();
+
+        final weight = weightSnapshot.docs[0].data()['weight'];
+        _targetWeight = targetWeight;
+        _weight = weight;
+        _toLoseWeight = _weight! - _targetWeight!;
+
+        return _toLoseWeight!;
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return const Stream.empty();
     }
   }
 
@@ -121,7 +158,43 @@ class DataHandler {
     } catch (e) {
       // ignore: avoid_print
       print(e);
-      return Stream.empty();
+      return const Stream.empty();
+    }
+  }
+
+  // make streamBuilder for targetWeightStream
+  StreamBuilder<double> get targetWeightStreamBuilder {
+    try {
+      return StreamBuilder<double>(
+        stream: targetWeightStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(
+              snapshot.data!.toStringAsFixed(1),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 21.0,
+                color: kFontColor,
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return StreamBuilder<double>(
+        stream: const Stream.empty(),
+        builder: (context, snapshot) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
     }
   }
 
@@ -151,7 +224,7 @@ class DataHandler {
       // ignore: avoid_print
       print(e);
       return StreamBuilder<double>(
-        stream: Stream.empty(),
+        stream: const Stream.empty(),
         builder: (context, snapshot) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -178,7 +251,7 @@ class DataHandler {
     } catch (e) {
       // ignore: avoid_print
       print(e);
-      return Stream.empty();
+      return const Stream.empty();
     }
   }
 
@@ -211,12 +284,11 @@ class DataHandler {
       // ignore: avoid_print
       print(e);
       return StreamBuilder<String>(
-        stream: Stream.empty(),
+        stream: const Stream.empty(),
         builder: (context, snapshot) {
           return const Center(
             child: CircularProgressIndicator(),
           );
-          ;
         },
       );
     }
@@ -309,8 +381,6 @@ class DataHandler {
     );
   }
 
-  // create stream for current weight to target weight
-
   // get _height
   double? get height => _height;
 
@@ -376,6 +446,7 @@ class DataHandler {
 
       return;
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }
@@ -399,6 +470,7 @@ class DataHandler {
 
       return;
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }
@@ -414,4 +486,12 @@ class DataHandler {
       return false;
     }
   }
+
+  // Setting target weight
+  void setTargetWeight(double targetWeight) {
+    _targetWeight = targetWeight;
+  }
+
+  // get toLoseWeight
+  double? get toLoseWeight => _toLoseWeight;
 }

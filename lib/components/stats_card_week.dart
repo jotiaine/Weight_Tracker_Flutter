@@ -45,7 +45,7 @@ class _StatsCardWeekState extends State<StatsCardWeek> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(
                     bottom: 10.0,
                   ),
@@ -58,17 +58,17 @@ class _StatsCardWeekState extends State<StatsCardWeek> {
                     ),
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.line_axis,
                   color: kMotivationIconColor,
                   size: 36.0,
                   semanticLabel: 'Line icon',
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 dataHandler.calculateBMIStreamBuilder,
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 dataHandler.getBMIResultStreamBuilder,

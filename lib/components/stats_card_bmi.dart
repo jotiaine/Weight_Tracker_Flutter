@@ -45,7 +45,7 @@ class _StatsCardBMIState extends State<StatsCardBMI> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(
                     bottom: 10.0,
                   ),
@@ -58,17 +58,17 @@ class _StatsCardBMIState extends State<StatsCardBMI> {
                     ),
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.numbers_sharp,
                   color: kMotivationIconColor,
                   size: 36.0,
-                  semanticLabel: 'Text to motivate',
+                  semanticLabel: 'Number icon',
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 dataHandler.calculateBMIStreamBuilder,
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 dataHandler.getBMIResultStreamBuilder,
