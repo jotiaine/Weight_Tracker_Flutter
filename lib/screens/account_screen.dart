@@ -20,8 +20,6 @@ class _AccountScreenState extends State<AccountScreen> {
     setState(() {
       _selectedIndex = index;
 
-      print(_selectedIndex);
-
       if (_selectedIndex == 0) {
         Navigator.pushNamed(context, HomeScreen.id);
       } else if (_selectedIndex == 1) {

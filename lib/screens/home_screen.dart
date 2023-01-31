@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/components/height_card.dart';
 import 'package:weight_tracker/components/motivation_card.dart';
-import 'package:weight_tracker/components/sex_card.dart';
+import 'package:weight_tracker/components/gender_card.dart';
 import 'package:weight_tracker/components/weight_target_card.dart';
 import 'package:weight_tracker/screens/account_screen.dart';
 import 'package:weight_tracker/screens/stats_screen.dart';
@@ -23,8 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-
-      print(_selectedIndex);
 
       if (_selectedIndex == 0) {
         Navigator.pushNamed(context, HomeScreen.id);
@@ -76,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: const [
-                      SexCard(),
+                      GenderCard(),
                       WeightCard(),
                       HeightCard(),
                       WeightTargetCard(),

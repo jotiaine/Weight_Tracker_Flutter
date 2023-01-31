@@ -118,10 +118,31 @@ class WeightCardState extends State<WeightCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
-                        dataHandler.addWeight(
-                          fieldTextController: fieldTextController,
-                          weight: _weight,
-                        );
+                        if (_weight! >= 45 && _weight! <= 300) {
+                          dataHandler.addWeight(
+                            weight: _weight,
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: kMotivationCardColor,
+                                title: const Text('Please enter a height'),
+                                content: const Text(
+                                    'You have to enter a weight to track it.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
 
                         clearText();
                       },

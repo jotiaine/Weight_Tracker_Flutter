@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:weight_tracker/components/height_card.dart';
-import 'package:weight_tracker/network/data_handler.dart';
+import 'package:weight_tracker/components/stats_card.dart';
 import 'package:weight_tracker/screens/account_screen.dart';
 import 'package:weight_tracker/screens/home_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
-import 'package:weight_tracker/components/weight_card.dart';
+import 'package:weight_tracker/network/data_handler.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -17,15 +16,11 @@ class StatsScreen extends StatefulWidget {
 
 class _StatsScreenState extends State<StatsScreen> {
   late DataHandler dataHandler;
-  late var _measurements;
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-
-      print(_selectedIndex);
 
       if (_selectedIndex == 0) {
         Navigator.pushNamed(context, HomeScreen.id);
@@ -45,14 +40,8 @@ class _StatsScreenState extends State<StatsScreen> {
   void initState() {
     super.initState();
 
-    dataHandler = DataHandler();
     _selectedIndex = 1;
-
-    // Fetching the measurements from the database
-    _measurements = () async => await dataHandler.getMeasurements();
-
-    // loop the _mearuments and print weight
-    print(_measurements);
+    dataHandler = DataHandler();
   }
 
   @override
@@ -67,19 +56,21 @@ class _StatsScreenState extends State<StatsScreen> {
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
             child: Column(
               children: [
                 SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                     children: const [
-                      WeightCard(),
-                      HeightCard(),
-                      HeightCard(),
+                      StatsCard(), // BMI
+                      StatsCard(), // Road to goal
+                      StatsCard(), // kuukausi
                       SizedBox(height: 10.0),
                     ],
                   ),
                 ),
+                dataHandler.bmiStatsBuilder(), // edelliset painot
               ],
             ),
           ),

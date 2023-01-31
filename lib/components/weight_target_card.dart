@@ -118,10 +118,32 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
-                        dataHandler.addWeightTarget(
-                          fieldTextController: fieldTextController,
-                          weightTarget: _weightTarget,
-                        );
+                        if (_weightTarget! >= 45 && _weightTarget! <= 150) {
+                          dataHandler.updateWeightTarget(
+                            weightTarget: _weightTarget,
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: kMotivationCardColor,
+                                title:
+                                    const Text('Please enter a target weight'),
+                                content: const Text(
+                                    'You have to enter a target weight to track it.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
 
                         clearText();
                       },
@@ -134,16 +156,6 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                     ),
                   ),
                 ),
-
-                // RawMaterialButton(
-                //   elevation: 0.0,
-                //   child: Icon(Icons),
-                //   fillColor: Colors.red,
-                //   shape: CircleBorder(),
-                //   onPressed: () {
-                //     print('asd');
-                //   },
-                // ),
               ],
             ),
           ),

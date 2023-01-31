@@ -4,25 +4,16 @@ import 'package:weight_tracker/utilities/constants.dart';
 
 enum Gender { male, female }
 
-class SexCard extends StatefulWidget {
-  const SexCard({super.key});
+class GenderCard extends StatefulWidget {
+  const GenderCard({super.key});
 
   @override
-  State<SexCard> createState() => _SexCardState();
+  State<GenderCard> createState() => _GenderCardState();
 }
 
-class _SexCardState extends State<SexCard> {
+class _GenderCardState extends State<GenderCard> {
   Gender? _selectedGender;
   late DataHandler dataHandler;
-
-  // void getSex() {
-  //   // change background to green
-
-  //   // search enums collection for a document with the uid
-  //   print(_firestore.collection('enums').snapshots().map((event) => null));
-
-  //   // if has data
-  // }
 
   @override
   void initState() {
@@ -58,7 +49,7 @@ class _SexCardState extends State<SexCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Sex',
+                  'Gender',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 14.0,
@@ -90,6 +81,8 @@ class _SexCardState extends State<SexCard> {
                         setState(() {
                           _selectedGender = Gender.male;
                         });
+
+                        dataHandler.updateGender(gender: 'MALE');
                       },
                       child: const Text(
                         'MALE',
@@ -118,6 +111,8 @@ class _SexCardState extends State<SexCard> {
                         setState(() {
                           _selectedGender = Gender.female;
                         });
+
+                        dataHandler.updateGender(gender: 'FEMALE');
                       },
                       child: const Text(
                         'FEMALE',

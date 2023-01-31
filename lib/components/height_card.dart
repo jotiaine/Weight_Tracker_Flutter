@@ -113,11 +113,32 @@ class _HeightCardState extends State<HeightCard> {
                     color: const Color.fromRGBO(50, 32, 70, 1),
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
-                      onPressed: () {
-                        dataHandler.addHeight(
-                          fieldTextController: fieldTextController,
-                          height: _height,
-                        );
+                      onPressed: () async {
+                        if (_height! >= 120 && _height! <= 220) {
+                          await dataHandler.updateHeight(
+                            height: _height,
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: kMotivationCardColor,
+                                title: const Text('Please enter a height'),
+                                content: const Text(
+                                    'You have to enter a height to track it.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
 
                         fieldTextController.clear();
                       },
