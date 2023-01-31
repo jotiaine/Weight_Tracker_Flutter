@@ -67,11 +67,18 @@ class _StatsCardWeekState extends State<StatsCardWeek> {
                 const SizedBox(
                   height: 10.0,
                 ),
-                dataHandler.calculateBMIStreamBuilder,
+                dataHandler.weekWeightStreamBuilder,
                 const SizedBox(
                   height: 10.0,
                 ),
-                dataHandler.getBMIResultStreamBuilder,
+                const Text(
+                  'Fantastic, keep it up!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: kFontColor,
+                  ),
+                ),
               ],
             ),
           ),

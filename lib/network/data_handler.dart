@@ -81,6 +81,62 @@ class DataHandler {
     }
   }
 
+  // fetch the target weight from the database
+  Stream<double> get weekWeightStream {
+    try {
+      getCurrentUser();
+
+      return _firestore
+          .collection('measurements')
+          .where('uid', isEqualTo: _uid)
+          .orderBy('date', descending: true)
+          .limit(7)
+          .snapshots()
+          .map((event) {
+        final weight = event.docs[0].data()['weight'];
+
+        double weightDay1 = weight;
+        double weightDay7 = event.docs[6].data()['weight'];
+
+        double weightDifference = weightDay1 - weightDay7;
+
+        return weightDifference;
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return const Stream.empty();
+    }
+  }
+
+  // make a streamBuilder for the weekWeightStream
+  StreamBuilder<double> get weekWeightStreamBuilder {
+    return StreamBuilder<double>(
+      stream: weekWeightStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Text(
+            snapshot.data!.toStringAsFixed(1),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 21.0,
+              color: kFontColor,
+            ),
+          );
+        } else {
+          return const Text(
+            'Not enough data yet',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 21.0,
+              color: kFontColor,
+            ),
+          );
+        }
+      },
+    );
+  }
+
   // Add a new user to the firebase database
   Future<bool> addUser({
     required String email,
