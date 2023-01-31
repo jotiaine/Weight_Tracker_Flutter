@@ -296,7 +296,10 @@ class DataHandler {
 
   StreamBuilder<QuerySnapshot<Map<String, dynamic>>> bmiStatsBuilder() {
     return StreamBuilder(
-      stream: _firestore.collection('measurements').snapshots(),
+      stream: _firestore
+          .collection('measurements')
+          .orderBy('date', descending: true)
+          .snapshots(),
       builder: (context, streamSnapshot) {
         // If data is waiting show progress bar
         if (streamSnapshot.connectionState == ConnectionState.waiting) {
