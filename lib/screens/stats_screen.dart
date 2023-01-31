@@ -70,7 +70,7 @@ class _StatsScreenState extends State<StatsScreen> {
                     ],
                   ),
                 ),
-                dataHandler.bmiStatsBuilder(), // edelliset painot
+                dataHandler.bmiStatsBuilder(), // Streaming the weights data
               ],
             ),
           ),

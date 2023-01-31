@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
-enum Gender { male, female }
-
 class GenderCard extends StatefulWidget {
   const GenderCard({super.key});
 
@@ -12,14 +10,16 @@ class GenderCard extends StatefulWidget {
 }
 
 class _GenderCardState extends State<GenderCard> {
-  Gender? _selectedGender;
   late DataHandler dataHandler;
+  late bool _isMale;
 
   @override
   void initState() {
     super.initState();
 
     dataHandler = DataHandler();
+
+    _isMale = true;
   }
 
   @override
@@ -56,11 +56,11 @@ class _GenderCardState extends State<GenderCard> {
                     color: Color.fromRGBO(27, 195, 184, 0.5),
                   ),
                 ),
-                const Icon(
-                  Icons.favorite,
+                Icon(
+                  _isMale ? Icons.male : Icons.female,
                   color: kMotivationIconColor,
                   size: 50.0,
-                  semanticLabel: 'Text to motivate',
+                  semanticLabel: 'Gender',
                 ),
                 const SizedBox(
                   height: 10.0,
@@ -72,14 +72,13 @@ class _GenderCardState extends State<GenderCard> {
                   ),
                   child: Material(
                     elevation: 5.0,
-                    color: _selectedGender == Gender.male
-                        ? kInputButtonColorPressed
-                        : kInputButtonColor,
+                    color:
+                        _isMale ? kInputButtonColorPressed : kInputButtonColor,
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
                         setState(() {
-                          _selectedGender = Gender.male;
+                          _isMale = true;
                         });
 
                         dataHandler.updateGender(gender: 'MALE');
@@ -102,14 +101,13 @@ class _GenderCardState extends State<GenderCard> {
                   ),
                   child: Material(
                     elevation: 5.0,
-                    color: _selectedGender == Gender.female
-                        ? kInputButtonColorPressed
-                        : kInputButtonColor,
+                    color:
+                        !_isMale ? kInputButtonColorPressed : kInputButtonColor,
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
                         setState(() {
-                          _selectedGender = Gender.female;
+                          _isMale = false;
                         });
 
                         dataHandler.updateGender(gender: 'FEMALE');
