@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+// Rapidapi
+
 class MotivationData {
-  final String _apiKey = 'dd6792186dmsh76cb74ea31ac68ap1fd6f6jsna1fcd0a2c466';
+  final String _apiKey = 'YOUR_API_KEY';
   final String _apiHost =
       'quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com';
-  final String _url =
-      'https://quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com/quote?token=ipworld.info';
+  final String _url = '';
 
   String? _motivationText;
   String? _motivationTextAuthor;
