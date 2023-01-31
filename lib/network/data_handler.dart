@@ -189,12 +189,15 @@ class DataHandler {
         stream: calculateBMIStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(
-              getBMIResult(),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16.0,
-                color: kFontColor,
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                getBMIResult(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: kFontColor,
+                ),
               ),
             );
           } else {
@@ -241,18 +244,57 @@ class DataHandler {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: documents.length,
             itemBuilder: (context, index) => Container(
-              height: 150.0,
-              padding: const EdgeInsets.only(
-                top: 20.0,
-                bottom: 0.0,
+              decoration: BoxDecoration(
+                color: kMotivationCardColor,
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    documents[index]['weight'].toString(),
+              height: 100.0,
+              margin: const EdgeInsets.only(
+                top: 10.0,
+                left: 10.0,
+                right: 10.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      top: 10.0,
+                      left: 10.0,
+                    ),
+                    child: Text(
+                      'History',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Color.fromRGBO(27, 195, 184, 0.5),
+                      ),
+                    ),
                   ),
-                ),
+                  const Icon(
+                    Icons.my_library_books_rounded,
+                    color: kMotivationIconColor,
+                    size: 26.0,
+                    semanticLabel: 'Weight data icon',
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 20.0,
+                    ),
+                    child: Text(
+                      documents[index]['weight'].toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        color: kFontColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );

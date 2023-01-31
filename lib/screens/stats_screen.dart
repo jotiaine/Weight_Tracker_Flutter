@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weight_tracker/components/stats_card.dart';
+import 'package:weight_tracker/components/stats_card_Week.dart';
+import 'package:weight_tracker/components/stats_card_bmi.dart';
+import 'package:weight_tracker/components/stats_card_target.dart';
 import 'package:weight_tracker/screens/account_screen.dart';
 import 'package:weight_tracker/screens/home_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
@@ -63,9 +65,9 @@ class _StatsScreenState extends State<StatsScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: const [
-                      StatsCard(), // BMI
-                      StatsCard(), // Road to goal
-                      StatsCard(), // kuukausi
+                      StatsCardBMI(), // BMI
+                      StatsCardTarget(), // Road to goal
+                      StatsCardWeek(), // kuukausi
                       SizedBox(height: 10.0),
                     ],
                   ),

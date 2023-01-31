@@ -1,18 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
-class StatsCard extends StatefulWidget {
-  const StatsCard({super.key});
+class StatsCardWeek extends StatefulWidget {
+  const StatsCardWeek({super.key});
 
   @override
-  State<StatsCard> createState() => _StatsCardState();
+  State<StatsCardWeek> createState() => _StatsCardWeekState();
 }
 
-class _StatsCardState extends State<StatsCard> {
+class _StatsCardWeekState extends State<StatsCardWeek> {
   late DataHandler dataHandler;
-  final _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -52,7 +50,7 @@ class _StatsCardState extends State<StatsCard> {
                     bottom: 10.0,
                   ),
                   child: Text(
-                    'BMI',
+                    'Week',
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: 14.0,
@@ -61,10 +59,10 @@ class _StatsCardState extends State<StatsCard> {
                   ),
                 ),
                 Icon(
-                  Icons.favorite,
+                  Icons.line_axis,
                   color: kMotivationIconColor,
                   size: 36.0,
-                  semanticLabel: 'Text to motivate',
+                  semanticLabel: 'Line icon',
                 ),
                 SizedBox(
                   height: 10.0,
