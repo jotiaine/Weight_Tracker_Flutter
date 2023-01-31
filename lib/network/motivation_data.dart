@@ -13,7 +13,7 @@ class MotivationData {
 
   Future getMotivationData() async {
     try {
-      var request = http.Request('GET', Uri.parse(''));
+      var request = http.Request('GET', Uri.parse(_url));
 
       request.headers.addAll({
         "X-Rapidapi-Key": _apiKey,
