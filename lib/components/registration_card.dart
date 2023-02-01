@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/login_screen.dart';
+import 'package:weight_tracker/screens/registration_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
 class RegistrationCard extends StatefulWidget {
@@ -13,21 +14,57 @@ class RegistrationCard extends StatefulWidget {
 class _RegistrationCardState extends State<RegistrationCard> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-  late DataHandler dataHandler;
-  String? _email;
-  String? _password;
+  late DataHandler _dataHandler;
+  late String _email;
+  late String _password;
   bool _isLoading = false;
 
-  void clearTextfields() {
+  void clearText() {
     _emailTextController.clear();
     _passwordTextController.clear();
+  }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: kMotivationCardColor,
+          title: const Text('Something went wrong'),
+          content: const Text(
+              'You have to enter a reasonable email and password, try again.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                clearText();
+
+                Navigator.pushNamed(context, LoginScreen.id);
+              },
+              child: const Text('Back'),
+            ),
+            TextButton(
+              onPressed: () {
+                clearText();
+
+                Navigator.pushNamed(context, RegistrationScreen.id);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void goToLoginScreen() {
+    Navigator.pushNamed(context, LoginScreen.id);
   }
 
   @override
   void initState() {
     super.initState();
 
-    dataHandler = DataHandler();
+    _dataHandler = DataHandler();
   }
 
   @override
@@ -79,7 +116,14 @@ class _RegistrationCardState extends State<RegistrationCard> {
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.center,
                   onChanged: (value) {
-                    _email = value;
+                    try {
+                      _email = value;
+                    } catch (e) {
+                      // ignore: avoid_print
+                      print(e);
+
+                      showErrorDialog();
+                    }
                   },
                   decoration: const InputDecoration(
                     hintText: 'Enter your email',
@@ -118,7 +162,14 @@ class _RegistrationCardState extends State<RegistrationCard> {
                   controller: _passwordTextController,
                   textAlign: TextAlign.center,
                   onChanged: (value) {
-                    _password = value;
+                    try {
+                      _password = value;
+                    } catch (e) {
+                      // ignore: avoid_print
+                      print(e);
+
+                      showErrorDialog();
+                    }
                   },
                   decoration: const InputDecoration(
                     hintText: 'Enter your password',
@@ -162,23 +213,28 @@ class _RegistrationCardState extends State<RegistrationCard> {
                     minWidth: 200.0,
                     height: 42.0,
                     onPressed: () async {
-                      setState(() {
-                        // This is to show the progress indicator
-                        _isLoading = true;
-                      });
+                      try {
+                        setState(() {
+                          // This is to show the progress indicator
+                          _isLoading = true;
+                        });
 
-                      // Add user to the database, if successful, navigate to the login screen
-                      await dataHandler.addUser(
-                              email: _email!, password: _password!)
-                          ? Navigator.pushNamed(context, LoginScreen.id)
-                          : null;
+                        // Add user to the database, if successful, navigate to the login screen
+                        bool isAdded = await _dataHandler.addUser(
+                            email: _email, password: _password);
 
-                      clearTextfields();
+                        isAdded ? goToLoginScreen() : showErrorDialog();
 
-                      setState(() {
-                        // This is to hide the progress indicator
-                        _isLoading = false;
-                      });
+                        clearText();
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      } catch (e) {
+                        // ignore: avoid_print
+                        print(e);
+
+                        showErrorDialog();
+                      }
                     },
                     child: const Text('Register'),
                   ),

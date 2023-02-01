@@ -19,11 +19,18 @@ class DataHandler {
   // Sign in the user with email and password
   Future<bool> signIn({required email, required password}) async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      await _auth
+          .signInWithEmailAndPassword(
         // checks if user exists and if password is correct
         email: email,
         password: password,
-      );
+      )
+          .catchError((e) {
+        // ignore: avoid_print
+        print(e);
+      }).then((value) {
+        return false;
+      });
 
       return true;
     } catch (e) {
@@ -146,10 +153,17 @@ class DataHandler {
   }) async {
     try {
       // Create username and password
-      await _auth.createUserWithEmailAndPassword(
+      await _auth
+          .createUserWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )
+          .catchError((e) {
+        // ignore: avoid_print
+        print(e);
+      }).then((value) {
+        return false;
+      });
 
       getCurrentUser();
 

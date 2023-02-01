@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/home_screen.dart';
 import 'package:weight_tracker/screens/registration_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
+
+import '../screens/login_screen.dart';
 
 class LoginCard extends StatefulWidget {
   const LoginCard({super.key});
@@ -13,25 +14,52 @@ class LoginCard extends StatefulWidget {
 }
 
 class _LoginCardState extends State<LoginCard> {
-  late DataHandler dataHandler;
-  User? loggedInUser;
+  late DataHandler _dataHandler;
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
-  String? _email;
-  String? _password;
+  late String _email;
+  late String _password;
   bool _isLoading = false;
 
-  void clearTextfields() {
+  void clearText() {
     _emailTextController.clear();
     _passwordTextController.clear();
+  }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: kMotivationCardColor,
+          title: const Text('Something went wrong'),
+          content:
+              const Text('Incorrect password or email, try again or register.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                clearText();
+
+                Navigator.pushNamed(context, LoginScreen.id);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void goToHomeScreen() {
+    Navigator.pushNamed(context, HomeScreen.id);
   }
 
   @override
   void initState() {
     super.initState();
 
-    dataHandler = DataHandler();
+    _dataHandler = DataHandler();
   }
 
   @override
@@ -83,7 +111,12 @@ class _LoginCardState extends State<LoginCard> {
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.center,
                   onChanged: (value) {
-                    _email = value;
+                    try {
+                      _email = value;
+                    } catch (e) {
+                      // ignore: avoid_print
+                      print(e);
+                    }
                   },
                   decoration: const InputDecoration(
                     hintText: 'Enter your email',
@@ -122,7 +155,12 @@ class _LoginCardState extends State<LoginCard> {
                   obscureText: true,
                   textAlign: TextAlign.center,
                   onChanged: (value) {
-                    _password = value;
+                    try {
+                      _password = value;
+                    } catch (e) {
+                      // ignore: avoid_print
+                      print(e);
+                    }
                   },
                   decoration: const InputDecoration(
                     hintText: 'Enter your password',
@@ -157,7 +195,12 @@ class _LoginCardState extends State<LoginCard> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, RegistrationScreen.id);
+                    try {
+                      Navigator.pushNamed(context, RegistrationScreen.id);
+                    } catch (e) {
+                      // ignore: avoid_print
+                      print(e);
+                    }
                   },
                   child: const Text(
                     'Sign up',
@@ -175,25 +218,32 @@ class _LoginCardState extends State<LoginCard> {
                     height: 42.0,
                     // Within the `FirstRoute` widget
                     onPressed: () async {
-                      setState(() {
-                        // This is to show the progress indicator
-                        _isLoading = true;
-                      });
+                      try {
+                        setState(() {
+                          // This is to show the progress indicator
+                          _isLoading = true;
+                        });
 
-                      // Sign in the user to the database, if successful, navigate to the home screen
-                      await dataHandler.signIn(
-                        email: _email,
-                        password: _password,
-                      )
-                          ? Navigator.pushNamed(context, HomeScreen.id)
-                          : null;
+                        // Sign in the user to the database, if successful, navigate to the home screen
+                        bool isLoggedIn = await _dataHandler.signIn(
+                          email: _email,
+                          password: _password,
+                        );
 
-                      clearTextfields();
+                        isLoggedIn ? goToHomeScreen() : showErrorDialog();
 
-                      setState(() {
-                        // This is to hide the progress indicator
-                        _isLoading = false;
-                      });
+                        clearText();
+
+                        setState(() {
+                          // This is to hide the progress indicator
+                          _isLoading = false;
+                        });
+                      } catch (e) {
+                        // ignore: avoid_print
+                        print(e);
+
+                        showErrorDialog();
+                      }
                     },
                     child: const Text(
                       'Login',
