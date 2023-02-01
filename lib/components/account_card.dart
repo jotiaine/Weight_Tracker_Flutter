@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/login_screen.dart';

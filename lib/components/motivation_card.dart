@@ -11,8 +11,8 @@ class MotivationCard extends StatefulWidget {
 
 class _MotivationCardState extends State<MotivationCard> {
   late MotivationData motivationData;
-  String? _motivationText;
-  String? _motivationTextAuthor;
+  late String _motivationText;
+  late String _motivationTextAuthor;
 
   void setupMotivationData() async {
     try {
@@ -32,6 +32,9 @@ class _MotivationCardState extends State<MotivationCard> {
   @override
   void initState() {
     super.initState();
+
+    _motivationText = '';
+    _motivationTextAuthor = '';
 
     setupMotivationData();
   }
@@ -85,7 +88,7 @@ class _MotivationCardState extends State<MotivationCard> {
                   height: 10.0,
                 ),
                 Text(
-                  _motivationText!,
+                  _motivationText,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 21.0,

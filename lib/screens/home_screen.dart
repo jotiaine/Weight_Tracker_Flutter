@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late MotivationCard motivationCard;
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    motivationCard = const MotivationCard();
     _selectedIndex = 0;
   }
 
@@ -61,12 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: const [
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
-                      MotivationCard(),
+                    children: [
+                      motivationCard,
+                      motivationCard,
+                      motivationCard,
+                      motivationCard,
+                      motivationCard,
                     ],
                   ),
                 ),

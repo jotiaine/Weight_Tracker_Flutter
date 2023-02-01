@@ -2,15 +2,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 // Rapidapi
+// GET /quote?token=ipworld.info HTTP/1.1
+// X-Rapidapi-Key: dd6792186dmsh76cb74ea31ac68ap1fd6f6jsna1fcd0a2c466
+// X-Rapidapi-Host: quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com
+// Host: quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com
 
 class MotivationData {
-  final String _apiKey = 'YOUR_API_KEY';
-  final String _apiHost =
-      'quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com';
+  final String _apiKey = '';
+  final String _apiHost = '';
   final String _url = '';
 
-  String? _motivationText;
-  String? _motivationTextAuthor;
+  late final String _motivationText;
+  late final String _motivationTextAuthor;
 
   Future getMotivationData() async {
     try {
@@ -30,12 +33,12 @@ class MotivationData {
         _motivationTextAuthor = data['author'];
 
         // check if the text is null
-        if (_motivationText!.isEmpty || _motivationText == null) {
+        if (_motivationText.isEmpty) {
           _motivationText = 'You can do it. Just keep going forward.';
         }
 
         // check if the author is null
-        if (_motivationTextAuthor!.isEmpty || _motivationTextAuthor == null) {
+        if (_motivationTextAuthor.isEmpty) {
           _motivationTextAuthor = 'Unknown';
         }
 
@@ -57,6 +60,6 @@ class MotivationData {
   }
 
   // getters
-  String get motivationText => _motivationText!;
-  String get motivationTextAuthor => _motivationTextAuthor!;
+  String get motivationText => _motivationText;
+  String get motivationTextAuthor => _motivationTextAuthor;
 }
