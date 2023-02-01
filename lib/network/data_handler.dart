@@ -21,17 +21,14 @@ class DataHandler {
     try {
       await _auth
           .signInWithEmailAndPassword(
-        // checks if user exists and if password is correct
         email: email,
         password: password,
       )
           .catchError((e) {
         // ignore: avoid_print
         print(e);
-      }).then((value) {
-        return false;
+        return e;
       });
-
       return true;
     } catch (e) {
       // ignore: avoid_print
@@ -51,6 +48,26 @@ class DataHandler {
     } catch (e) {
       // ignore: avoid_print
       print(e);
+    }
+  }
+
+  // Fetch the user's gender from database
+  Future<String> getUserGender() async {
+    try {
+      getCurrentUser();
+
+      var snapshot = await _firestore
+          .collection('enums')
+          .where('uid', isEqualTo: _uid)
+          .limit(1)
+          .get();
+
+      String gender = snapshot.docs[0].data()['gender'];
+      return gender;
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return '';
     }
   }
 
@@ -161,8 +178,7 @@ class DataHandler {
           .catchError((e) {
         // ignore: avoid_print
         print(e);
-      }).then((value) {
-        return false;
+        return e;
       });
 
       getCurrentUser();

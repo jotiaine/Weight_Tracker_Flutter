@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/login_screen.dart';
-import 'package:weight_tracker/screens/registration_screen.dart';
 import 'package:weight_tracker/utilities/constants.dart';
 
 class RegistrationCard extends StatefulWidget {
@@ -46,7 +45,7 @@ class _RegistrationCardState extends State<RegistrationCard> {
               onPressed: () {
                 clearText();
 
-                Navigator.pushNamed(context, RegistrationScreen.id);
+                Navigator.pop(context);
               },
               child: const Text('OK'),
             ),

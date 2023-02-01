@@ -24,7 +24,7 @@ class WeightCardState extends State<WeightCard> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: kMotivationCardColor,
-          title: const Text('Please enter a target weight'),
+          title: const Text('Please enter your current weight'),
           content:
               const Text('You have to enter a reasonable weight to track it.'),
           actions: [

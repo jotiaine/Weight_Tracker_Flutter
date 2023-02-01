@@ -25,9 +25,8 @@ class _HeightCardState extends State<HeightCard> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: kMotivationCardColor,
-          title: const Text('Please enter a target weight'),
-          content:
-              const Text('You have to enter a reasonable height to track it.'),
+          title: const Text('Please enter your height'),
+          content: const Text('You have to enter a reasonable height.'),
           actions: [
             TextButton(
               onPressed: () {

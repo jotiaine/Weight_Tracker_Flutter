@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/utilities/constants.dart';
@@ -10,16 +11,59 @@ class GenderCard extends StatefulWidget {
 }
 
 class _GenderCardState extends State<GenderCard> {
-  late DataHandler dataHandler;
+  late DataHandler _dataHandler;
+  late String _fetchedGender;
   late bool _isMale;
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: kMotivationCardColor,
+          title: const Text('Something went wrong'),
+          content: const Text('We are doing our best to fix the problem.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future getUserGender() async {
+    return await _dataHandler.getUserGender();
+  }
+
+  void setGender() {
+    getUserGender().then((value) {
+      _fetchedGender = value;
+    }).then((value) {
+      setState(() {
+        if (_fetchedGender == 'FEMALE') {
+          _isMale = false;
+        } else if (_fetchedGender == 'MALE') {
+          _isMale = true;
+        } else {
+          _isMale = true;
+        }
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
 
-    dataHandler = DataHandler();
-
+    _dataHandler = DataHandler();
     _isMale = true;
+    _fetchedGender = '';
+    setGender();
   }
 
   @override
@@ -77,11 +121,23 @@ class _GenderCardState extends State<GenderCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
-                        setState(() {
-                          _isMale = true;
-                        });
-
-                        dataHandler.updateGender(gender: 'MALE');
+                        try {
+                          if (_dataHandler != null) {
+                            _dataHandler
+                                .updateGender(gender: 'MALE')
+                                .then((value) {
+                              // setState(() {
+                              setGender();
+                              // });
+                            });
+                          } else {
+                            showErrorDialog();
+                          }
+                        } catch (e) {
+                          // ignore: avoid_print
+                          print(e);
+                          showErrorDialog();
+                        }
                       },
                       child: const Text(
                         'MALE',
@@ -106,11 +162,19 @@ class _GenderCardState extends State<GenderCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
-                        setState(() {
-                          _isMale = false;
-                        });
-
-                        dataHandler.updateGender(gender: 'FEMALE');
+                        try {
+                          _dataHandler.updateGender(gender: 'FEMALE').then(
+                            (value) {
+                              // setState(() {
+                              setGender();
+                              // });
+                            },
+                          );
+                        } catch (e) {
+                          // ignore: avoid_print
+                          print(e);
+                          showErrorDialog();
+                        }
                       },
                       child: const Text(
                         'FEMALE',
