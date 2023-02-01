@@ -10,26 +10,55 @@ class WeightTargetCard extends StatefulWidget {
 }
 
 class WeightTargetCardState extends State<WeightTargetCard> {
-  late DataHandler dataHandler;
-  late bool _isAddedToDatabase;
-
+  late DataHandler _dataHandler;
   late double _weightTarget;
-
-  final fieldTextController = TextEditingController();
+  final _fieldTextController = TextEditingController();
 
   void clearText() {
-    fieldTextController.clear();
+    _fieldTextController.clear();
+  }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: kMotivationCardColor,
+          title: const Text('Please enter a target weight'),
+          content: const Text(
+              'You have to enter a reasonable target weight to track it.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                clearText();
+
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   void initState() {
     super.initState();
 
-    dataHandler = DataHandler();
+    _dataHandler = DataHandler();
+
     setState(() {
-      _isAddedToDatabase = false;
       _weightTarget = 0.0;
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // Clean up the controller when the widget is disposed.
+    _fieldTextController.dispose();
   }
 
   @override
@@ -81,7 +110,7 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                     vertical: 10.0,
                   ),
                   child: TextField(
-                    controller: fieldTextController,
+                    controller: _fieldTextController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
@@ -105,7 +134,13 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                       ),
                     ),
                     onChanged: (value) {
-                      _weightTarget = double.parse(value);
+                      try {
+                        _weightTarget = double.parse(value);
+                      } catch (e) {
+                        // ignore: avoid_print
+                        print(e);
+                        showErrorDialog();
+                      }
                     },
                   ),
                 ),
@@ -124,49 +159,22 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
-                        if (_weightTarget >= 45 && _weightTarget <= 150) {
-                          dataHandler
-                              .updateWeightTarget(
-                                weightTarget: _weightTarget,
-                              )
-                              .then((value) => {
-                                    setState(() {
-                                      _isAddedToDatabase = true;
-                                    }),
-                                  });
-                        } else {
-                          setState(() {
-                            _isAddedToDatabase = false;
-                          });
-                        }
+                        try {
+                          if (_weightTarget >= 45 && _weightTarget <= 150) {
+                            _dataHandler
+                                .updateWeightTarget(
+                                  weightTarget: _weightTarget,
+                                )
+                                .then((value) => clearText());
+                          } else {
+                            showErrorDialog();
+                          }
+                        } catch (e) {
+                          // ignore: avoid_print
+                          print(e);
 
-                        if (!_isAddedToDatabase) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: kMotivationCardColor,
-                                title:
-                                    const Text('Please enter a target weight'),
-                                content: const Text(
-                                    'You have to enter a reasonable target weight to track it.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          showErrorDialog();
                         }
-
-                        setState(() {
-                          _isAddedToDatabase = false;
-                        });
-                        clearText();
                       },
                       child: const Text(
                         'SAVE',

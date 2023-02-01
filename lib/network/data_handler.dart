@@ -111,6 +111,8 @@ class DataHandler {
 
   // make a streamBuilder for the weekWeightStream
   StreamBuilder<double> get weekWeightStreamBuilder {
+    getCurrentUser();
+
     return StreamBuilder<double>(
       stream: weekWeightStream,
       builder: (context, snapshot) {
@@ -221,6 +223,8 @@ class DataHandler {
   // make streamBuilder for targetWeightStream
   StreamBuilder<double> get targetWeightStreamBuilder {
     try {
+      getCurrentUser();
+
       return StreamBuilder<double>(
         stream: targetWeightStream,
         builder: (context, snapshot) {
@@ -257,6 +261,8 @@ class DataHandler {
   // make streamBuilder for calculateBMIStream
   StreamBuilder<double> get calculateBMIStreamBuilder {
     try {
+      getCurrentUser();
+
       return StreamBuilder<double>(
         stream: calculateBMIStream,
         builder: (context, snapshot) {
@@ -293,6 +299,8 @@ class DataHandler {
   // make stream for getBMIResult
   Stream<String> get getBMIResultStream {
     try {
+      getCurrentUser();
+
       return calculateBMIStream.map((bmi) {
         if (bmi < 18.5) {
           return 'Underweight';
@@ -314,6 +322,8 @@ class DataHandler {
   // make streamBuilder for getBMIResult
   StreamBuilder<Object> get getBMIResultStreamBuilder {
     try {
+      getCurrentUser();
+
       return StreamBuilder<double>(
         stream: calculateBMIStream,
         builder: (context, snapshot) {
@@ -351,6 +361,8 @@ class DataHandler {
   }
 
   StreamBuilder<QuerySnapshot<Map<String, dynamic>>> bmiStatsBuilder() {
+    getCurrentUser();
+
     return StreamBuilder(
       stream: _firestore
           .collection('measurements')
@@ -452,14 +464,22 @@ class DataHandler {
 
   // Calculate the bmi result
   String getBMIResult() {
-    if (_bmi! > 30) {
-      return 'Obese';
-    } else if (_bmi! >= 25) {
-      return 'Overweight';
-    } else if (_bmi! > 18.5) {
-      return 'Normal';
-    } else {
-      return 'Underweight';
+    try {
+      getCurrentUser();
+
+      if (_bmi! > 30) {
+        return 'Obese';
+      } else if (_bmi! >= 25) {
+        return 'Overweight';
+      } else if (_bmi! > 18.5) {
+        return 'Normal';
+      } else {
+        return 'Underweight';
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return 'Error';
     }
   }
 
@@ -537,6 +557,8 @@ class DataHandler {
   // Log out the current user
   Future<bool> logOut() async {
     try {
+      getCurrentUser();
+
       await _auth.signOut();
       return true;
     } catch (e) {
@@ -548,6 +570,8 @@ class DataHandler {
 
   // Setting target weight
   void setTargetWeight(double targetWeight) {
+    getCurrentUser();
+
     _targetWeight = targetWeight;
   }
 

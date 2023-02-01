@@ -10,21 +10,56 @@ class HeightCard extends StatefulWidget {
 }
 
 class _HeightCardState extends State<HeightCard> {
-  late DataHandler dataHandler;
+  late DataHandler _dataHandler;
   late double _height;
-  late bool _isAddedToDatabase;
 
-  final fieldTextController = TextEditingController();
+  final _fieldTextController = TextEditingController();
+
+  void clearText() {
+    _fieldTextController.clear();
+  }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: kMotivationCardColor,
+          title: const Text('Please enter a target weight'),
+          content:
+              const Text('You have to enter a reasonable height to track it.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                clearText();
+
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
 
-    dataHandler = DataHandler();
+    _dataHandler = DataHandler();
+
     setState(() {
-      _isAddedToDatabase = false;
       _height = 0.0;
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // Clean up the controller when the widget is disposed.
+    _fieldTextController.dispose();
   }
 
   @override
@@ -76,7 +111,7 @@ class _HeightCardState extends State<HeightCard> {
                     vertical: 10.0,
                   ),
                   child: TextField(
-                    controller: fieldTextController,
+                    controller: _fieldTextController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
@@ -100,7 +135,13 @@ class _HeightCardState extends State<HeightCard> {
                       ),
                     ),
                     onChanged: (value) {
-                      _height = double.parse(value);
+                      try {
+                        _height = double.parse(value);
+                      } catch (e) {
+                        // ignore: avoid_print
+                        print(e);
+                        showErrorDialog();
+                      }
                     },
                   ),
                 ),
@@ -119,49 +160,23 @@ class _HeightCardState extends State<HeightCard> {
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () async {
-                        if (_height >= 120 && _height <= 220) {
-                          await dataHandler
-                              .updateHeight(
-                            height: _height,
-                          )
-                              .then((value) {
-                            setState(() {
-                              _isAddedToDatabase = true;
+                        try {
+                          if (_height >= 120 && _height <= 220) {
+                            await _dataHandler
+                                .updateHeight(
+                              height: _height,
+                            )
+                                .then((value) {
+                              clearText();
                             });
-                          });
-                        } else {
-                          setState(() {
-                            _isAddedToDatabase = false;
-                          });
+                          } else {
+                            showErrorDialog();
+                          }
+                        } catch (e) {
+                          // ignore: avoid_print
+                          print(e);
+                          showErrorDialog();
                         }
-
-                        if (!_isAddedToDatabase) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: kMotivationCardColor,
-                                title:
-                                    const Text('Please enter a target weight'),
-                                content: const Text(
-                                    'You have to enter a reasonable target weight to track it.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-
-                        setState(() {
-                          _isAddedToDatabase = false;
-                        });
-                        fieldTextController.clear();
                       },
                       child: const Text(
                         'SAVE',

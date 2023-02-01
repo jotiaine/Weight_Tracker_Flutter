@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/network/data_handler.dart';
 import 'package:weight_tracker/screens/login_screen.dart';
@@ -79,9 +80,11 @@ class _AccountCardState extends State<AccountCard> {
                         _isLoading = true;
                       });
 
-                      await dataHandler.logOut()
-                          ? Navigator.pushNamed(context, LoginScreen.id)
-                          : null;
+                      await dataHandler.logOut().then((value) =>
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()),
+                              (Route<dynamic> route) => false));
 
                       setState(() {
                         // This is to show the progress indicator
