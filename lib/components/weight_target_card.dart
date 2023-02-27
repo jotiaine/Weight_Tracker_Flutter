@@ -160,7 +160,9 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                     child: MaterialButton(
                       onPressed: () {
                         try {
-                          if (_weightTarget >= 45 && _weightTarget <= 150) {
+                          if (_weightTarget >= 45 &&
+                              _weightTarget <= 150 &&
+                              _weightTarget != 0.0) {
                             _dataHandler
                                 .updateWeightTarget(
                                   weightTarget: _weightTarget,
@@ -174,6 +176,9 @@ class WeightTargetCardState extends State<WeightTargetCard> {
                           print(e);
 
                           showErrorDialog();
+                        } finally {
+                          clearText();
+                          dispose();
                         }
                       },
                       child: const Text(

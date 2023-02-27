@@ -46,6 +46,17 @@ class WeightCardState extends State<WeightCard> {
   void initState() {
     super.initState();
 
+    _fieldTextController.addListener(() {
+      try {
+        _weight = double.parse(_fieldTextController.text);
+        print(_fieldTextController.text);
+      } catch (e) {
+        // ignore: avoid_print
+        print(e);
+        showErrorDialog();
+      }
+    });
+
     _dataHandler = DataHandler();
 
     setState(() {
@@ -55,10 +66,9 @@ class WeightCardState extends State<WeightCard> {
 
   @override
   void dispose() {
-    super.dispose();
-
     // Clean up the controller when the widget is disposed.
     _fieldTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -134,13 +144,14 @@ class WeightCardState extends State<WeightCard> {
                       ),
                     ),
                     onChanged: (value) {
-                      try {
-                        _weight = double.parse(value);
-                      } catch (e) {
-                        // ignore: avoid_print
-                        print(e);
-                        showErrorDialog();
-                      }
+                      print(value);
+                      // try {
+                      //   _weight = double.parse(value);
+                      // } catch (e) {
+                      //   // ignore: avoid_print
+                      //   print(e);
+                      //   showErrorDialog();
+                      // }
                     },
                   ),
                 ),
@@ -166,13 +177,20 @@ class WeightCardState extends State<WeightCard> {
                                   weight: _weight,
                                 )
                                 .then((value) => clearText());
+
+                            clearText();
                           } else {
+                            clearText();
                             showErrorDialog();
                           }
                         } catch (e) {
                           // ignore: avoid_print
                           print(e);
                           showErrorDialog();
+                        } finally {
+                          dispose();
+                          clearText();
+                          // clear the controller value
                         }
                       },
                       child: const Text(

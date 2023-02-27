@@ -13,7 +13,9 @@ class GenderCard extends StatefulWidget {
 class _GenderCardState extends State<GenderCard> {
   late DataHandler _dataHandler;
   late String _fetchedGender;
-  late bool _isMale;
+  late IconData _genderIcon;
+  late Color _femaleButtonColor;
+  late Color _maleButtonColor;
 
   void showErrorDialog() {
     showDialog(
@@ -46,11 +48,17 @@ class _GenderCardState extends State<GenderCard> {
     }).then((value) {
       setState(() {
         if (_fetchedGender == 'FEMALE') {
-          _isMale = false;
+          _femaleButtonColor = kInputButtonColorPressed;
+          _maleButtonColor = kInputButtonColor;
+          _genderIcon = Icons.female;
         } else if (_fetchedGender == 'MALE') {
-          _isMale = true;
+          _femaleButtonColor = kInputButtonColor;
+          _maleButtonColor = kInputButtonColorPressed;
+          _genderIcon = Icons.male;
         } else {
-          _isMale = true;
+          _femaleButtonColor = kInputButtonColor;
+          _maleButtonColor = kInputButtonColor;
+          _genderIcon = Icons.person;
         }
       });
     });
@@ -61,8 +69,10 @@ class _GenderCardState extends State<GenderCard> {
     super.initState();
 
     _dataHandler = DataHandler();
-    _isMale = true;
     _fetchedGender = '';
+    _genderIcon = Icons.person;
+    _femaleButtonColor = kInputButtonColor;
+    _maleButtonColor = kInputButtonColor;
     setGender();
   }
 
@@ -101,7 +111,7 @@ class _GenderCardState extends State<GenderCard> {
                   ),
                 ),
                 Icon(
-                  _isMale ? Icons.male : Icons.female,
+                  _genderIcon,
                   color: kMotivationIconColor,
                   size: 50.0,
                   semanticLabel: 'Gender',
@@ -116,8 +126,7 @@ class _GenderCardState extends State<GenderCard> {
                   ),
                   child: Material(
                     elevation: 5.0,
-                    color:
-                        _isMale ? kInputButtonColorPressed : kInputButtonColor,
+                    color: _maleButtonColor,
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {
@@ -157,8 +166,7 @@ class _GenderCardState extends State<GenderCard> {
                   ),
                   child: Material(
                     elevation: 5.0,
-                    color:
-                        !_isMale ? kInputButtonColorPressed : kInputButtonColor,
+                    color: _femaleButtonColor,
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                       onPressed: () {

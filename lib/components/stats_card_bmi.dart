@@ -20,6 +20,11 @@ class _StatsCardBMIState extends State<StatsCardBMI> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

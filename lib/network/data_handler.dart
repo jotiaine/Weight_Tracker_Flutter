@@ -7,7 +7,7 @@ import 'package:weight_tracker/utilities/constants.dart';
 
 class DataHandler {
   final _firestore = FirebaseFirestore.instance;
-  User? loggedInUser;
+  User? _loggedInUser;
   final _auth = FirebaseAuth.instance;
   late final String _uid;
   double? _bmi;
@@ -15,6 +15,20 @@ class DataHandler {
   double? _weight;
   double? _targetWeight;
   double? _toLoseWeight;
+
+  // Stream controllers
+  // final _targetWeightStreamController = StreamController<double>();
+  // final _weekWeightStreamController = StreamController<double>();
+  // final _calculateBMIStreamController = StreamController<double>();
+  // final _getBMIResultStreamController = StreamController<String>();
+
+  // Stream getters
+  // Stream<double> get targetWeightStream => _targetWeightStreamController.stream;
+  // Stream<double> get weekWeightStream => _weekWeightStreamController.stream;
+  // Stream<double> get calculateBMIStream => _calculateBMIStreamController.stream;
+  // Stream<String> get getBMIResultStream => _getBMIResultStreamController.stream;
+
+  // Stream builders
 
   // Sign in the user with email and password
   Future<bool> signIn({required email, required password}) async {
@@ -42,8 +56,8 @@ class DataHandler {
     try {
       final user = _auth.currentUser;
       if (user != null) {
-        loggedInUser = user;
-        _uid = loggedInUser!.uid;
+        _loggedInUser = user;
+        _uid = _loggedInUser!.uid;
       }
     } catch (e) {
       // ignore: avoid_print
@@ -186,7 +200,7 @@ class DataHandler {
       // Create an empty nums document
       await _firestore.collection('enums').add({
         'height': null,
-        'gender': null,
+        'gender': 'PERSON',
         'target': null,
         'uid': _uid,
       });

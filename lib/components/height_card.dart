@@ -175,6 +175,8 @@ class _HeightCardState extends State<HeightCard> {
                           // ignore: avoid_print
                           print(e);
                           showErrorDialog();
+                        } finally {
+                          clearText();
                         }
                       },
                       child: const Text(

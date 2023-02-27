@@ -82,7 +82,7 @@ class _LoginCardState extends State<LoginCard> {
                 const Icon(
                   Icons.track_changes,
                   size: 50.0,
-                  color: Colors.lightBlueAccent,
+                  color: Color.fromRGBO(64, 196, 255, 1),
                 ),
                 const Text(
                   'Weightsteps',

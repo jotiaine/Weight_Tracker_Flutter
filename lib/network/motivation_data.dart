@@ -1,12 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-// Rapidapi
-// GET /quote?token=ipworld.info HTTP/1.1
-// X-Rapidapi-Key: dd6792186dmsh76cb74ea31ac68ap1fd6f6jsna1fcd0a2c466
-// X-Rapidapi-Host: quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com
-// Host: quotes-inspirational-quotes-motivational-quotes.p.rapidapi.com
-
 class MotivationData {
   final String _apiKey = '';
   final String _apiHost = '';
