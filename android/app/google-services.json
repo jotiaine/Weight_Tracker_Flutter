@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "350025296111",
-    "project_id": "weight-tracker-36531",
-    "storage_bucket": "weight-tracker-36531.appspot.com"
+    "project_number": "865434646950",
+    "project_id": "weightsteps-flutter",
+    "storage_bucket": "weightsteps-flutter.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:350025296111:android:91367f29c3ed9bd9d5931a",
+        "mobilesdk_app_id": "1:865434646950:android:4ecf75bb2f00807ede3767",
         "android_client_info": {
-          "package_name": "com.jonitiainen.weight_tracker"
+          "package_name": "com.jonitiainen.weight_tracker_flutter"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "350025296111-06mtuahvdhlvj5q0v5ejg6p8t75u7pnf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB8xVB3T0aVgBwmFxuGumZKTm1S0bvcJEw"
+          "current_key": "AIzaSyDp5BAtyRVglHyR_TMiPk4UEPAbXhXoh7Q"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "350025296111-06mtuahvdhlvj5q0v5ejg6p8t75u7pnf.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
